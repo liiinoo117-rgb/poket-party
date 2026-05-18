@@ -1,21 +1,151 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>tile sleepover / POKET PARTY</title><link rel="stylesheet" href="style.css"></head><body><div class="site"><header class="top"><a class="brand" href="index.html">POKET PARTY</a><nav class="menu"><a href="index.html#objects">objects</a><a href="index.html#log">log</a></nav></header><main><section class="detail-hero"><div class="detail-photo"><img src="item-07.jpg" alt="tile sleepover"></div><div class="detail-title"><h1>tile sleepover</h1><div class="detail-price">¥6,200</div></div></section><section class="detail-body"><p>A tiled room with flash, satin, pastel squares, bottles, sink, and mirror. A sleepover that looks like a bathroom showroom.</p><ul class="specs"><li><span>type</span><span>digital object</span></li><li><span>room</span><span>flash room</span></li><li><span>state</span><span>waiting</span></li></ul><a class="buy" href="#">架空のカートに入れる</a><a class="back-link" href="index.html#objects">back to objects</a></section></main></div>
-<script>
-  const dreamButton = document.querySelector(".buy");
-  if (dreamButton) {
-    const toast = document.createElement("div");
-    toast.className = "detail-dream-toast";
-    toast.textContent = "Please wake from the dream.";
-    document.body.appendChild(toast);
+POKET PARTY next site
 
-    dreamButton.addEventListener("click", function(event) {
-      event.preventDefault();
-      toast.classList.add("is-visible");
-      window.clearTimeout(toast.timer);
-      toast.timer = window.setTimeout(function() {
-        toast.classList.remove("is-visible");
-      }, 1800);
-    });
-  }
-</script>
+Netlify Drop にこのフォルダごと、または zip のままアップロードできます。
+一枚目の画像は main-bg.jpg と item-01.jpg に入っています。
+商品詳細ページも同梱済みです。
 
-</body></html>
+更新: トップ画像が粒子になって切り替わるアニメーションを追加。画像リストは script.js の heroImages で変更できます。
+
+更新: トップ画像切り替えを、丸い粒子ではなく細かい四角ドット粒子に変更。ドット絵っぽく、粒子数を増やしました。
+
+更新: 日本語化、脳科学の短文、日記10件上限を追加しました。日記は11件目以降、古いものから消えます。
+
+修正: 日本語化しすぎた部分を戻し、日本語は短い注釈だけにしました。日記10件制限は残しています。
+
+更新: Moodを静かな占い風に変更。送るとラッキーカラーと身体的・哲学的な一言がランダム表示されます。タイトル以外は日本語寄りにしました。
+
+修正: メイントップ文言を元の英語ムードに戻し、占い結果は日本語20パターンに増やしました。
+
+修正: メイントップは元の英語ムードへ戻し、Mood占いは日本語20パターンに増やしました。
+
+修正: トップタイトルのclass名・HTMLタグを復元し、タイトル配置を元に戻しました。
+
+更新: 商品スライダーの下ドット/丸ボタンをやめ、上部にシンプルなカウント＋進捗バーUIを追加。Mood占いUIも上質に調整。
+
+修正: 商品スライダー下の丸UIを削除し、上部のカウント/進捗バーUIへ変更。Mood UIを上質化。
+
+修正: 壊れていた script.js を丸ごと安全な構成に差し替え。スライダー上部UI、Mood占い、日記10件制限、粒子アニメを維持。
+
+更新: UI品質を上げるためのプレミアム調整を追加。スライダーの現在位置、Mood占い、ナビ、余白、文字階層を改善しました。
+
+更新: Mood占いを、より上質で手術台のように静かなガーリーUIへ強化。身体指数、状態表示、結果カードの質感を追加。
+
+更新: 商品スライダー上にポートフォリオスライダー追加。作品クリックはメール宛。商品クリックは夢から覚めるメッセージ表示。SNS導線追加。
+
+更新: Portfolioの縁を消して商品UIと統一。商品クリックは詳細ページへ復帰。詳細ページのメール先を指定アドレスへ。Moodは縁を減らし、送信数をローカル表示。あなたの日記にNGワードブロックを追加。
+
+更新:
+- Xリンクを追加しました: @ioooooooo_o
+- Supabase保存に対応しました。
+- mood_submissions にMood送信を保存できます。
+- diary_entries に日記送信を保存できます。
+- Supabase未設定でも、これまで通りlocalStorageで動きます。
+
+保存先の用意:
+1. Supabaseでプロジェクトを作る
+2. SQL Editorに supabase-schema.sql の中身を貼って実行
+3. Project URL と anon public key を supabase-config.js に貼る
+4. Netlifyへ再アップロード
+
+注意:
+SupabaseのURLとanon keyは、あなたのアカウントで作成する必要があります。
+ここでは、サイト側の保存先接続コードとSQLを用意しています。
+
+更新:
+- ポートフォリオを正方形に戻しました。
+- Moodのボタン・カードの縁を極力消しました。
+- Xリンクを確認済み: @ioooooooo_o
+- Spotify favorite song を追加しました。
+- 商品詳細のメール送信をやめ、架空のカート操作で「Please wake from the dream.」が出るようにしました。
+- 日記のNGワード判定を強化し、「しね」も保存できないようにしました。
+
+更新:
+- Spotifyセクションを削除しました。
+- 上部の切り替わる画像から、人が写っている画像を外しました。
+- 現在の切り替え画像は、人が写っていない item-03 / item-05 / item-06 のみです。
+
+更新:
+- 商品スライダーは「床の遺物 / 閉じたドールハウス / ケーキの卓 / ポニーの夢」の4点だけに絞りました。
+- ポートフォリオの絵はそのまま残しています。
+- 上部の切り替わる画像も、この4点だけに変更しました。
+- 他の人が写っていた画像は、トップの切り替えや商品表示から外しています。
+
+更新: ガーリーさは残しつつ、全体の空気をより奇妙で生々しく、手術台と薬品の匂いがする方向へ再調整しました。
+
+更新:
+- 性格診断室 personality-test.html を追加しました。
+- トップナビと下部導線から診断室へ飛べます。
+- 結果画像の殻を用意しています。
+  diagnosis-specimen.jpg
+  diagnosis-ribbon.jpg
+  diagnosis-mirror.jpg
+  diagnosis-lamb.jpg
+- 上の4枚を同じフォルダに入れると、診断結果に画像が表示されます。
+
+更新:
+- 診断室の見た目を、かわいさよりも奇妙さ・靄・不気味さの方向へ再調整。
+- 診断室への導線を、気分セクションのすぐ下へ移動。
+
+更新:
+- 診断結果をより重厚にしました。結果画像のまわりにフレーム、分析カード、診断バランス、長めの解釈文を追加。
+- 結果画像の殻はそのまま残しています。画像名は:
+  diagnosis-specimen.jpg
+  diagnosis-ribbon.jpg
+  diagnosis-mirror.jpg
+  diagnosis-lamb.jpg
+- トップの次に「見取り図」を追加。各部屋を触るとそのセクションへ飛びます。
+- カラーパレットは、参考画像のダスティピンク / プラム / くすんだグレー紫 / ミルク色を基調に寄せました。
+
+更新: 見取り図セクションを、参考画像のような間取り図・フロアプラン風UIに差し替えました。各部屋をタップすると対応セクションへ移動します。
+
+更新: 見取り図をさらに本格的なフロアプラン風に再調整し、各部屋・廊下に厚みと影を足して、少し立体に見える3D風UIへ強化しました。
+
+更新: 見取り図を方眼なしの世界観寄りデザインに再調整。背景のグリッドを削除し、夢っぽい気配の装飾を追加。文字が重ならないよう部屋サイズ・文字サイズ・ラベル内容を見直しました。
+
+更新: 見取り図をよりシンプルなUIに整理。装飾を減らし、文字の被りを避けるよう部屋配置を調整。balconyは図形とラベルを分離して読みやすくしました。
+
+更新: 見取り図をさらに洗練。線を細くし、背景を白ベースに変更。薄ベージュ感を減らし、全体を高品質でミニマルなUIへ整理。パースを少し強め、立体感を上品に追加。balconyラベルもさらに下げて重なりを防止。
+
+更新: 見取り図を斜めパースなしのフラットな奇妙な家へ変更。線を細くし、画像参考のような装飾線画（星・蔓・燭台・リボン）を追加。奇妙な推理をしたくなる、ミステリー風の平面見取り図UIに再構成しました。
+
+更新: 性格診断室の導入セクションを上質化。上のエリアから間隔をしっかり取り、診断室だけの特別感が出るよう、独立したパネル・オーブ装飾・特徴チップ・丸ボタンCTAを追加しました。
+
+更新:
+- サイト全体に「展示室の奥に、記憶に触れてくる謎の少女の部屋がある」というコンセプトを統合しました。
+- トップ直下にコンセプト説明を追加。
+- 見取り図の説明と部屋名を、世界観に合わせて変更。
+- Moodを「少女に気分を伝える」場所として再定義。
+- 診断室を「記憶へ侵入してくる少女の部屋」として再定義。
+- 日記を「来訪者の記録室」として再定義。
+- Supabase設定済みの場合、来訪者の日記を読み出せるようにSQLポリシーとJSを追加。
+
+更新:
+- サイト全体の文量を削減しました。
+- コンセプト文・見取り図・Mood・診断室・記録室の説明を短くしました。
+- より不穏で、白く、洗練されたトーンに調整しました。
+- 診断結果ページの文章量も少し圧縮しました。
+
+更新: 少女の説明を削除。診断室の文言を中立化し、リンク文言を「診断室へ」に変更。気分セクションのテキスト量を圧縮し、見取り図は斜めにせず少し立体的な線と面に再調整しました。
+
+更新: 新しい5点の羊作品をポートフォリオスライダーに追加し、総数を14点に更新しました。
+
+更新: 全体の余白を増やし、タイポグラフィを無機質なサンセリフ寄りに調整。見出しのメリハリを強化。診断室・気分・各種ボタンの影とグラデーションを極力なくし、フラットで洗練されたUIに調整しました。
+
+更新:
+- 見取り図を高級感のあるSVGフロアプランへ差し替え。
+- セクションのカード感を減らし、背景全体の切り替えで区切る設計に変更。
+- 診断ページをサイト本体に合わせて全面改修。
+- 診断結果から画像枠を削除。
+- 12問の生活診断に変更し、15通りの結果・アドバイス・ラッキーカラー・生活バランス表示を追加。
+
+更新: 見取り図を立体版から、参考画像のような高品質な平面フロアプランへ変更。雰囲気は維持しつつ、建築図面のような黒線ベースで整理。
+
+更新: 開いた瞬間に表示されるトップ画像として opening-visual.jpg を追加。タイトルは POKET PARTY のまま、ヒーロー画像スライダーの1枚目にも設定しました。
+
+更新: トップのメイン画像を4枚に差し替え。初期表示は hero-main-01.jpg、その後 hero-main-02.jpg / hero-main-03.jpg / hero-main-04.jpg に切り替わります。
+
+更新: トップのメイン画像を6枚に差し替え。初期表示は hero-main-01.jpg（黒髪の人物）、その後 02〜06 に順番に切り替わります。
+
+更新: 架空の商品スライダーを新しい立体作品9点に差し替え。クリック時は "Please wake from the dream." のトースト表示。
+
+2026 update: swapped dream products to new head sculptures set; portfolio cards now show title only; floor plan typography changed to English and linework softened/thinned.
