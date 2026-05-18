@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>tile sleepover / POKET PARTY</title><link rel="stylesheet" href="style.css"></head><body><div class="site"><header class="top"><a class="brand" href="index.html">POKET PARTY</a><nav class="menu"><a href="index.html#objects">objects</a><a href="index.html#log">log</a></nav></header><main><section class="detail-hero"><div class="detail-photo"><img src="item-07.jpg" alt="tile sleepover"></div><div class="detail-title"><h1>tile sleepover</h1><div class="detail-price">¥6,200</div></div></section><section class="detail-body"><p>A tiled room with flash, satin, pastel squares, bottles, sink, and mirror. A sleepover that looks like a bathroom showroom.</p><ul class="specs"><li><span>type</span><span>digital object</span></li><li><span>room</span><span>flash room</span></li><li><span>state</span><span>waiting</span></li></ul><a class="buy" href="#">架空のカートに入れる</a><a class="back-link" href="index.html#objects">back to objects</a></section></main></div>
+<script>
+  const dreamButton = document.querySelector(".buy");
+  if (dreamButton) {
+    const toast = document.createElement("div");
+    toast.className = "detail-dream-toast";
+    toast.textContent = "Please wake from the dream.";
+    document.body.appendChild(toast);
+
+    dreamButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      toast.classList.add("is-visible");
+      window.clearTimeout(toast.timer);
+      toast.timer = window.setTimeout(function() {
+        toast.classList.remove("is-visible");
+      }, 1800);
+    });
+  }
+</script>
+
+</body></html>

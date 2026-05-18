@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>life diagnosis / POKET PARTY</title>
+  <style>
+    :root{
+      --ink:#211f25;
+      --muted:rgba(33,31,37,.56);
+      --thin:rgba(33,31,37,.13);
+      --paper:#ffffff;
+      --sub:#f6f6f5;
+      --sub2:#eeeeed;
+      --accent:#5c5975;
+      --ui-sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","Hiragino Sans","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:#fcfcfe;
+      font-family:var(--ui-sans);
+      font-size:13px;
+      line-height:1.9;
+      letter-spacing:.01em;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .site{
+      width:min(100%,520px);
+      min-height:100vh;
+      margin:0 auto;
+      background:#fff;
+      overflow:hidden;
+    }
+    .top{
+      position:fixed;
+      inset:0 auto auto 50%;
+      transform:translateX(-50%);
+      z-index:50;
+      width:min(100%,520px);
+      padding:16px 22px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(33,31,37,.055);
+    }
+    .brand{
+      font-size:12px;
+      letter-spacing:.22em;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+    .menu{
+      display:flex;
+      gap:16px;
+      color:rgba(33,31,37,.52);
+      font-size:10px;
+      letter-spacing:.18em;
+      text-transform:lowercase;
+      font-weight:700;
+    }
+
+    .hero{
+      min-height:88svh;
+      padding:118px 24px 74px;
+      display:grid;
+      align-content:end;
+      background:#fff;
+    }
+    .kicker{
+      margin:0 0 18px;
+      color:rgba(33,31,37,.38);
+      font-size:10px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+    }
+    h1{
+      margin:0;
+      font-size:44px;
+      line-height:1.02;
+      letter-spacing:.03em;
+      font-weight:720;
+    }
+    .hero-copy{
+      margin:24px 0 0;
+      max-width:310px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:2;
+    }
+    .start-link{
+      display:inline-block;
+      margin-top:32px;
+      padding-bottom:6px;
+      border-bottom:1px solid rgba(33,31,37,.26);
+      font-size:11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+
+    section{
+      padding:108px 24px;
+      scroll-margin-top:72px;
+    }
+    .test-section{
+      background:linear-gradient(180deg,#fbfbff 0%,#f6f5fb 100%);
+    }
+    .section-head{
+      display:grid;
+      grid-template-columns:38% 1fr;
+      gap:30px;
+      margin-bottom:76px;
+      align-items:start;
+    }
+    .section-head h2{
+      margin:0;
+      font-size:25px;
+      line-height:1.16;
+      font-weight:720;
+    }
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.9;
+    }
+
+    .quiz{
+      display:grid;
+      gap:62px;
+    }
+    .question{
+      border-top:1px solid var(--thin);
+      padding-top:24px;
+    }
+    .q-number{
+      display:block;
+      margin-bottom:12px;
+      color:rgba(33,31,37,.36);
+      font-size:10px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+    .question h3{
+      margin:0 0 20px;
+      font-size:17px;
+      line-height:1.55;
+      font-weight:720;
+    }
+    .choices{
+      display:grid;
+      gap:2px;
+    }
+    .choice{
+      position:relative;
+      display:block;
+    }
+    .choice input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+    .choice span{
+      display:block;
+      padding:15px 0;
+      border-bottom:1px solid rgba(33,31,37,.08);
+      color:rgba(33,31,37,.64);
+      font-size:12px;
+      line-height:1.75;
+      transition:padding-left .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .choice input:checked + span{
+      padding-left:14px;
+      color:rgba(33,31,37,.94);
+      border-color:rgba(33,31,37,.30);
+    }
+    .choice input:checked + span::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:50%;
+      width:5px;
+      height:5px;
+      border-radius:50%;
+      background:rgba(33,31,37,.72);
+      transform:translateY(-50%);
+    }
+
+    .diagnose-button{
+      width:100%;
+      margin-top:8px;
+      padding:15px 18px;
+      border:1px solid rgba(33,31,37,.22);
+      border-radius:999px;
+      background:transparent;
+      color:rgba(33,31,37,.88);
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-weight:760;
+      cursor:pointer;
+      box-shadow:none;
+    }
+    .diagnose-button:active{
+      opacity:.58;
+    }
+    .warning{
+      margin:14px 0 0;
+      color:rgba(135,54,68,.78);
+      font-size:11px;
+      opacity:0;
+      transition:opacity .22s ease;
+    }
+    .warning.is-visible{opacity:1}
+
+    .result-section{
+      display:none;
+      background:#fff;
+    }
+    .result-section.is-visible{
+      display:block;
+      animation:fadeUp .75s cubic-bezier(.19,1,.22,1) both;
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(16px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+    .result-kicker{
+      margin:0 0 16px;
+      color:rgba(33,31,37,.36);
+      font-size:10px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+    .result-title{
+      margin:0;
+      font-size:34px;
+      line-height:1.12;
+      font-weight:760;
+      letter-spacing:.02em;
+    }
+    .result-lead{
+      margin:24px 0 0;
+      max-width:360px;
+      color:rgba(33,31,37,.68);
+      font-size:13px;
+      line-height:2;
+    }
+    .result-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px 18px;
+      margin-top:42px;
+      padding-top:30px;
+      border-top:1px solid var(--thin);
+    }
+    .result-item{
+      min-width:0;
+    }
+    .result-label{
+      display:block;
+      margin-bottom:8px;
+      color:rgba(33,31,37,.36);
+      font-size:9px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+    }
+    .result-value{
+      display:block;
+      color:rgba(33,31,37,.88);
+      font-size:13px;
+      line-height:1.75;
+      font-weight:650;
+    }
+    .advice-block{
+      margin-top:42px;
+      padding-top:30px;
+      border-top:1px solid var(--thin);
+    }
+    .advice-block h3{
+      margin:0 0 14px;
+      font-size:18px;
+      line-height:1.35;
+    }
+    .advice-block p{
+      margin:0;
+      color:rgba(33,31,37,.66);
+      font-size:13px;
+      line-height:2;
+    }
+    .score-panel{
+      margin-top:46px;
+      padding-top:28px;
+      border-top:1px solid var(--thin);
+    }
+    .score-head{
+      margin:0 0 18px;
+      color:rgba(33,31,37,.38);
+      font-size:10px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+    .score-row{
+      display:grid;
+      grid-template-columns:72px 1fr 34px;
+      gap:12px;
+      align-items:center;
+      margin:13px 0;
+    }
+    .score-name{
+      color:rgba(33,31,37,.52);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .score-bar{
+      position:relative;
+      height:1px;
+      background:rgba(33,31,37,.14);
+    }
+    .score-bar span{
+      position:absolute;
+      left:0;
+      top:-1px;
+      height:3px;
+      width:0%;
+      background:rgba(33,31,37,.86);
+    }
+    .score-num{
+      text-align:right;
+      color:rgba(33,31,37,.50);
+      font-size:10px;
+    }
+    .retry{
+      margin-top:42px;
+      padding:0 0 6px;
+      border:0;
+      border-bottom:1px solid rgba(33,31,37,.24);
+      background:transparent;
+      color:rgba(33,31,37,.72);
+      font-size:11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      font-weight:700;
+      cursor:pointer;
+    }
+    footer{
+      padding:78px 24px 58px;
+      background:#f8f8fc;
+      color:rgba(33,31,37,.36);
+      font-size:9px;
+      letter-spacing:.18em;
+      text-align:center;
+      text-transform:uppercase;
+    }
+    @media (max-width:430px){
+      .section-head{grid-template-columns:1fr;gap:18px;margin-bottom:62px}
+      h1{font-size:40px}
+      .result-grid{grid-template-columns:1fr;gap:22px}
+    }
+  </style>
+
+    <style>
+      .hero{
+        background:
+          linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,.97) 20%, rgba(255,255,255,.88) 42%, rgba(255,255,255,.62) 66%, rgba(255,255,255,.18) 100%),
+          url("diagnosis-room-bg.jpg") right center / cover no-repeat;
+      }
+      .test-section{
+        background:
+          linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,.985) 18%, rgba(255,255,255,.93) 34%, rgba(255,255,255,.80) 52%, rgba(255,255,255,.54) 74%, rgba(255,255,255,.22) 100%),
+          url("diagnosis-room-bg.jpg") right center / cover no-repeat;
+      }
+    </style>
+</head>
+<body>
+  <div class="site">
+    <header class="top">
+      <a class="brand" href="index.html">POKET PARTY</a>
+      <nav class="menu">
+        <a href="index.html">home</a>
+        <a href="#test">test</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="kicker">life diagnosis / private routine</p>
+          <h1>生活診断</h1>
+          <p class="hero-copy">感情ではなく、生活の癖を見る診断です。睡眠、部屋、身体、集中、対人、制作の流れから、今の整え方を返します。</p>
+          <a class="start-link" href="#test">start</a>
+        </div>
+      </section>
+
+      <section class="test-section" id="test">
+        <div class="section-head">
+          <h2>12の<br>質問</h2>
+          <p>近いものを選んでください。結果は15通り。画像は出ません。</p>
+        </div>
+
+        <form class="quiz" id="quizForm">
+          <div class="question">
+            <span class="q-number">question 01</span>
+            <h3>朝、最初に乱れやすいものは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q1" data-vector="rest:3,body:1"><span>起きても身体が戻ってこない</span></label>
+              <label class="choice"><input type="radio" name="q1" data-vector="order:3,focus:1"><span>部屋や予定が目に入って疲れる</span></label>
+              <label class="choice"><input type="radio" name="q1" data-vector="focus:3,creation:1"><span>考えが多くて開始できない</span></label>
+              <label class="choice"><input type="radio" name="q1" data-vector="contact:3,rest:1"><span>人からの連絡で心が先に動く</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 02</span>
+            <h3>部屋が荒れる時の理由は？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q2" data-vector="creation:3,order:1"><span>作る途中の物が増える</span></label>
+              <label class="choice"><input type="radio" name="q2" data-vector="rest:3,order:1"><span>片づける体力が残らない</span></label>
+              <label class="choice"><input type="radio" name="q2" data-vector="focus:2,order:2"><span>どこから触るか決められない</span></label>
+              <label class="choice"><input type="radio" name="q2" data-vector="body:3,rest:1"><span>身体の不快感で後回しになる</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 03</span>
+            <h3>集中が切れる一番の原因は？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q3" data-vector="body:3,focus:1"><span>空腹、眠気、姿勢、冷え</span></label>
+              <label class="choice"><input type="radio" name="q3" data-vector="contact:3,focus:1"><span>誰かの反応が気になる</span></label>
+              <label class="choice"><input type="radio" name="q3" data-vector="order:3,focus:1"><span>未処理の用事が残っている</span></label>
+              <label class="choice"><input type="radio" name="q3" data-vector="creation:3,focus:1"><span>別のアイデアに引っ張られる</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 04</span>
+            <h3>疲れた日にやりがちなことは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q4" data-vector="rest:3,contact:1"><span>人を避けて、何も返せなくなる</span></label>
+              <label class="choice"><input type="radio" name="q4" data-vector="contact:3,rest:1"><span>逆に誰かに触れて確認したくなる</span></label>
+              <label class="choice"><input type="radio" name="q4" data-vector="creation:3,body:1"><span>妙に作業だけ続けてしまう</span></label>
+              <label class="choice"><input type="radio" name="q4" data-vector="focus:3,order:1"><span>調べものや考えごとに逃げる</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 05</span>
+            <h3>食事や身体の扱いで近いものは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q5" data-vector="body:3,order:1"><span>気づくと雑になっている</span></label>
+              <label class="choice"><input type="radio" name="q5" data-vector="order:3,body:1"><span>整えるとかなり回復する</span></label>
+              <label class="choice"><input type="radio" name="q5" data-vector="rest:3,body:1"><span>眠れないと全部崩れる</span></label>
+              <label class="choice"><input type="radio" name="q5" data-vector="focus:2,body:2"><span>気にしすぎて逆に疲れる</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 06</span>
+            <h3>人との距離で起こりやすいことは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q6" data-vector="contact:3,focus:1"><span>相手の温度を読みすぎる</span></label>
+              <label class="choice"><input type="radio" name="q6" data-vector="rest:3,contact:1"><span>親しくても一人の時間が必要</span></label>
+              <label class="choice"><input type="radio" name="q6" data-vector="order:2,contact:2"><span>境界線を決めると安心する</span></label>
+              <label class="choice"><input type="radio" name="q6" data-vector="creation:2,contact:2"><span>言葉より作品や行動で渡したい</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 07</span>
+            <h3>作ることについて近いものは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q7" data-vector="creation:3,rest:1"><span>作ることで回復する</span></label>
+              <label class="choice"><input type="radio" name="q7" data-vector="creation:3,focus:1"><span>作りたいが、始めるまでが重い</span></label>
+              <label class="choice"><input type="radio" name="q7" data-vector="order:2,creation:2"><span>素材や環境が整うと進む</span></label>
+              <label class="choice"><input type="radio" name="q7" data-vector="body:2,creation:2"><span>身体の状態にかなり左右される</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 08</span>
+            <h3>予定が詰まった時、必要なのは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q8" data-vector="order:3,focus:1"><span>順番を決めること</span></label>
+              <label class="choice"><input type="radio" name="q8" data-vector="rest:3,body:1"><span>休む時間を先に置くこと</span></label>
+              <label class="choice"><input type="radio" name="q8" data-vector="contact:3,order:1"><span>誰に何を返すか決めること</span></label>
+              <label class="choice"><input type="radio" name="q8" data-vector="focus:3,creation:1"><span>考える時間を確保すること</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 09</span>
+            <h3>夜に残りやすいものは？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q9" data-vector="focus:3,rest:1"><span>考えすぎた余熱</span></label>
+              <label class="choice"><input type="radio" name="q9" data-vector="contact:3,rest:1"><span>人とのやりとりの残像</span></label>
+              <label class="choice"><input type="radio" name="q9" data-vector="creation:3,focus:1"><span>作りかけの続き</span></label>
+              <label class="choice"><input type="radio" name="q9" data-vector="body:3,rest:1"><span>身体の疲労や違和感</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 10</span>
+            <h3>一日を立て直すなら、最初に触る場所は？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q10" data-vector="order:3,rest:1"><span>机、床、バッグの中</span></label>
+              <label class="choice"><input type="radio" name="q10" data-vector="body:3,rest:1"><span>水分、食事、姿勢</span></label>
+              <label class="choice"><input type="radio" name="q10" data-vector="focus:3,order:1"><span>今日やらないことの整理</span></label>
+              <label class="choice"><input type="radio" name="q10" data-vector="contact:2,creation:2"><span>誰かに渡すもの、作るもの</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 11</span>
+            <h3>あなたに効きやすいご褒美は？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q11" data-vector="rest:3,body:1"><span>眠る、湯気、静かな布</span></label>
+              <label class="choice"><input type="radio" name="q11" data-vector="creation:3,order:1"><span>小さな素材や道具</span></label>
+              <label class="choice"><input type="radio" name="q11" data-vector="contact:3,rest:1"><span>短い会話や反応</span></label>
+              <label class="choice"><input type="radio" name="q11" data-vector="focus:3,order:1"><span>一人で深く潜れる時間</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <span class="q-number">question 12</span>
+            <h3>明日の自分に一つ渡すなら？</h3>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q12" data-vector="order:3,focus:1"><span>短い手順</span></label>
+              <label class="choice"><input type="radio" name="q12" data-vector="rest:3,body:1"><span>睡眠の余白</span></label>
+              <label class="choice"><input type="radio" name="q12" data-vector="body:3,order:1"><span>あたたかい身体</span></label>
+              <label class="choice"><input type="radio" name="q12" data-vector="creation:3,contact:1"><span>作りかけの火種</span></label>
+            </div>
+          </div>
+
+          <button class="diagnose-button" type="submit">diagnose</button>
+          <p class="warning" id="warning">すべての質問に答えてください。</p>
+        </form>
+      </section>
+
+      <section class="result-section" id="result">
+        <p class="result-kicker" id="resultKicker">result</p>
+        <h2 class="result-title" id="resultTitle"></h2>
+        <p class="result-lead" id="resultLead"></p>
+
+        <div class="result-grid">
+          <div class="result-item"><span class="result-label">生活の癖</span><span class="result-value" id="habitValue"></span></div>
+          <div class="result-item"><span class="result-label">今の弱点</span><span class="result-value" id="weakValue"></span></div>
+          <div class="result-item"><span class="result-label">処方</span><span class="result-value" id="prescriptionValue"></span></div>
+          <div class="result-item"><span class="result-label">lucky color</span><span class="result-value" id="colorValue"></span></div>
+        </div>
+
+        <div class="advice-block">
+          <h3>今日のアドバイス</h3>
+          <p id="adviceValue"></p>
+        </div>
+
+        <div class="score-panel">
+          <p class="score-head">life balance</p>
+          <div class="score-row"><span class="score-name">rest</span><div class="score-bar"><span id="barRest"></span></div><span class="score-num" id="numRest">00</span></div>
+          <div class="score-row"><span class="score-name">order</span><div class="score-bar"><span id="barOrder"></span></div><span class="score-num" id="numOrder">00</span></div>
+          <div class="score-row"><span class="score-name">body</span><div class="score-bar"><span id="barBody"></span></div><span class="score-num" id="numBody">00</span></div>
+          <div class="score-row"><span class="score-name">focus</span><div class="score-bar"><span id="barFocus"></span></div><span class="score-num" id="numFocus">00</span></div>
+          <div class="score-row"><span class="score-name">contact</span><div class="score-bar"><span id="barContact"></span></div><span class="score-num" id="numContact">00</span></div>
+          <div class="score-row"><span class="score-name">create</span><div class="score-bar"><span id="barCreation"></span></div><span class="score-num" id="numCreation">00</span></div>
+        </div>
+
+        <button class="retry" id="retryButton" type="button">again</button>
+      </section>
+    </main>
+
+    <footer>POKET PARTY / life diagnosis</footer>
+  </div>
+
+  <script>
+    const axes = ["rest", "order", "body", "focus", "contact", "creation"];
+
+    const profiles = [
+      {
+        id:"R01", title:"白い睡眠不足", vector:{rest:92,order:38,body:72,focus:58,contact:30,creation:45},
+        lead:"休息の不足が、思考や感情の輪郭まで薄くしています。今は気合いよりも、眠れる条件を先に作る時期です。",
+        habit:"疲れているのに、止まる判断が遅れる。",
+        weak:"回復前に次の予定を入れてしまう。",
+        prescription:"夜の予定を一つだけ削る。",
+        color:"ミルクホワイト",
+        advice:"今日の最優先は、成果ではなく回復の確保です。寝る前に明日の不安を書き出して、身体から順に戻してください。"
+      },
+      {
+        id:"R02", title:"過密な机", vector:{rest:44,order:94,body:45,focus:72,contact:40,creation:58},
+        lead:"環境のノイズが多いほど、判断が遅くなるタイプです。片づけは美化ではなく、脳の通路を空ける作業です。",
+        habit:"物と予定が増えると、行動開始が重くなる。",
+        weak:"全部を整えようとして止まる。",
+        prescription:"机の左上だけを空ける。",
+        color:"冷たいグレー",
+        advice:"全体を片づけなくていいです。小さな作業面を一つ作るだけで、集中は戻り始めます。"
+      },
+      {
+        id:"R03", title:"身体警報", vector:{rest:60,order:50,body:96,focus:48,contact:34,creation:45},
+        lead:"気分の問題に見えて、実際は身体の信号が強く出ています。食事、水分、姿勢、温度を軽視しないでください。",
+        habit:"身体の違和感を後回しにして、あとで全部崩れる。",
+        weak:"感情と身体疲労を混同しやすい。",
+        prescription:"水、食事、首肩の順に整える。",
+        color:"薄い鉄色",
+        advice:"今日は大きな決断を急がないで。まず身体の不快を三つ減らすと、考えの暗さも少し薄くなります。"
+      },
+      {
+        id:"R04", title:"蛍光灯の思考", vector:{rest:40,order:58,body:42,focus:96,contact:38,creation:62},
+        lead:"考える力が強すぎて、生活の中に光が残り続けています。深掘りの前に、終わりの線を引く必要があります。",
+        habit:"考え始めると、生活の区切りが消える。",
+        weak:"理解しないと休めない。",
+        prescription:"調べものに終了時刻を置く。",
+        color:"青白いシルバー",
+        advice:"今日は答えを出す日ではなく、考えを閉じる日です。未完のまま保存する練習をしてください。"
+      },
+      {
+        id:"R05", title:"反応待ちの部屋", vector:{rest:44,order:44,body:36,focus:54,contact:96,creation:46},
+        lead:"人の反応が生活のリズムに入り込みやすい状態です。連絡は大事ですが、心の主電源にしないほうがいいです。",
+        habit:"相手の温度で自分の予定が揺れる。",
+        weak:"返信や既読に意識を持っていかれる。",
+        prescription:"通知を見る時間を二回に分ける。",
+        color:"くすんだローズ",
+        advice:"今日はすぐ返さない練習をして。距離を置くことは冷たさではなく、生活を守る技術です。"
+      },
+      {
+        id:"R06", title:"作りかけの火", vector:{rest:46,order:44,body:42,focus:68,contact:36,creation:98},
+        lead:"制作が回復にも逃避にもなっています。火は強いけれど、燃料の補給が追いつかないと急に止まります。",
+        habit:"作ることで持ち直すが、生活管理が後回しになる。",
+        weak:"中断が下手で、疲労に気づきにくい。",
+        prescription:"作業前に終了条件を決める。",
+        color:"焦げたピンク",
+        advice:"今日は完成より保存です。途中で止めても続きがわかるメモを残すと、明日の自分が助かります。"
+      },
+      {
+        id:"R07", title:"静かな過敏", vector:{rest:72,order:52,body:62,focus:84,contact:70,creation:48},
+        lead:"外からの刺激を細かく受け取りすぎています。感度は才能ですが、遮断の設計がないと消耗します。",
+        habit:"音、視線、言葉の残り香を拾いやすい。",
+        weak:"刺激を浴びた後の回復時間を見積もらない。",
+        prescription:"予定の後に無音の余白を入れる。",
+        color:"スモークラベンダー",
+        advice:"今日は刺激を減らすことを予定にしてください。何もしない時間ではなく、神経を洗う時間です。"
+      },
+      {
+        id:"R08", title:"境界線の不足", vector:{rest:58,order:76,body:44,focus:54,contact:84,creation:38},
+        lead:"自分の領域と他人の領域が混ざりやすい状態です。やさしさの前に、境界線を一本置いてください。",
+        habit:"相手に合わせるほど、自分の生活が薄くなる。",
+        weak:"断る理由を探しすぎる。",
+        prescription:"返答の前に10分置く。",
+        color:"淡い墨色",
+        advice:"今日は説明しすぎないで大丈夫です。短い返事で境界線を守るほうが、長期的には誠実です。"
+      },
+      {
+        id:"R09", title:"儀式不足", vector:{rest:66,order:88,body:70,focus:56,contact:32,creation:52},
+        lead:"あなたには小さな反復が効きます。気分で生活を動かすより、儀式のような手順を置くと安定します。",
+        habit:"始め方が決まっていないと一日が散る。",
+        weak:"気分が乗るまで待ってしまう。",
+        prescription:"朝の三手順を固定する。",
+        color:"乾いたベージュ",
+        advice:"今日は小さな順番を作ってください。水、机、五分作業。それだけで一日の床ができます。"
+      },
+      {
+        id:"R10", title:"深夜の過集中", vector:{rest:82,order:42,body:52,focus:88,contact:24,creation:76},
+        lead:"夜に集中が立ち上がりやすく、睡眠と制作が取り引きになっています。美しいけれど、長くは続きません。",
+        habit:"静かな時間に入りすぎて、眠る機会を逃す。",
+        weak:"集中の快感で疲労を見落とす。",
+        prescription:"夜作業は一区切りだけにする。",
+        color:"濃紺",
+        advice:"今日は夜の自分を信用しすぎないで。続きは明日のために残すほうが、作品も生活も守れます。"
+      },
+      {
+        id:"R11", title:"白紙の戦略家", vector:{rest:44,order:72,body:38,focus:90,contact:30,creation:64},
+        lead:"考える力と整理力はあります。ただ、最初の一手を大きくしすぎると止まります。戦略を小さくしてください。",
+        habit:"全体像を掴むまで始められない。",
+        weak:"一手目に完璧を求める。",
+        prescription:"五分で終わる入口を作る。",
+        color:"硬い白",
+        advice:"今日は計画を完成させなくていいです。最小の入口だけ作れば、脳は後からついてきます。"
+      },
+      {
+        id:"R12", title:"やわらかい逃避", vector:{rest:84,order:36,body:62,focus:36,contact:62,creation:58},
+        lead:"つらさを柔らかいものへ逃がすのが上手です。ただ、逃避が長くなると生活の輪郭がぼやけます。",
+        habit:"安心できるものに沈んで、戻る時刻を失う。",
+        weak:"癒しと先延ばしの境界が曖昧。",
+        prescription:"安心の後に一つだけ処理する。",
+        color:"乳白ピンク",
+        advice:"今日は自分を責めず、でも戻る合図を作って。やさしい逃げ道には出口も必要です。"
+      },
+      {
+        id:"R13", title:"外部ノイズ中毒", vector:{rest:38,order:52,body:40,focus:70,contact:88,creation:60},
+        lead:"情報、人、反応、刺激が入りすぎています。面白さの量に対して、消化する時間が足りません。",
+        habit:"見すぎる、読みすぎる、拾いすぎる。",
+        weak:"入力を止めると不安になる。",
+        prescription:"一時間だけ入力を切る。",
+        color:"鈍い水色",
+        advice:"今日は集める日ではなく、消化する日です。見たものを増やすより、一つを形にしてください。"
+      },
+      {
+        id:"R14", title:"生活の空洞", vector:{rest:70,order:32,body:72,focus:42,contact:28,creation:40},
+        lead:"大きく壊れてはいないけれど、生活の中心が空きがちです。強い目標より、身体的な支点が必要です。",
+        habit:"何もしていないわけではないのに、手応えが残らない。",
+        weak:"一日の終わりに輪郭が薄くなる。",
+        prescription:"同じ時間に同じ行動を一つ置く。",
+        color:"灰白",
+        advice:"今日は生活の中心を一つだけ作って。湯、食事、散歩、机。その反復が空洞を埋めます。"
+      },
+      {
+        id:"R15", title:"静かな再起動", vector:{rest:62,order:72,body:68,focus:66,contact:48,creation:64},
+        lead:"大きな問題より、小さな調整が効く状態です。生活を全面改造せず、微細な調律で戻れます。",
+        habit:"崩れた時も、戻る力は残っている。",
+        weak:"全部を変えようとして疲れる。",
+        prescription:"一日一箇所だけ整える。",
+        color:"薄い緑灰",
+        advice:"今日は大きく変えないでいいです。水を飲む、机を拭く、十分だけ進める。その小ささが正解です。"
+      }
+    ];
+
+    const form = document.getElementById("quizForm");
+    const warning = document.getElementById("warning");
+    const resultSection = document.getElementById("result");
+    const retryButton = document.getElementById("retryButton");
+
+    function parseVector(text) {
+      const v = {rest:0,order:0,body:0,focus:0,contact:0,creation:0};
+      text.split(",").forEach(part => {
+        const [key, val] = part.split(":");
+        if (key && val && key in v) v[key] += Number(val);
+      });
+      return v;
+    }
+
+    function addVector(total, vector) {
+      axes.forEach(axis => total[axis] += vector[axis] || 0);
+    }
+
+    function normalizeScores(scores) {
+      const max = Math.max(...axes.map(axis => scores[axis]), 1);
+      const normalized = {};
+      axes.forEach(axis => normalized[axis] = Math.round((scores[axis] / max) * 100));
+      return normalized;
+    }
+
+    function distance(a, b) {
+      return Math.sqrt(axes.reduce((sum, axis) => sum + Math.pow((a[axis] || 0) - (b[axis] || 0), 2), 0));
+    }
+
+    function chooseProfile(scores) {
+      return profiles
+        .map(profile => ({ profile, d: distance(scores, profile.vector) }))
+        .sort((a, b) => a.d - b.d)[0].profile;
+    }
+
+    function setText(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function renderBars(scores) {
+      const map = {
+        rest:["barRest","numRest"],
+        order:["barOrder","numOrder"],
+        body:["barBody","numBody"],
+        focus:["barFocus","numFocus"],
+        contact:["barContact","numContact"],
+        creation:["barCreation","numCreation"]
+      };
+      Object.entries(map).forEach(([axis, ids]) => {
+        document.getElementById(ids[0]).style.width = scores[axis] + "%";
+        document.getElementById(ids[1]).textContent = String(scores[axis]).padStart(2, "0");
+      });
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const checked = [...form.querySelectorAll("input[type='radio']:checked")];
+
+      if (checked.length < 12) {
+        warning.classList.add("is-visible");
+        setTimeout(() => warning.classList.remove("is-visible"), 1600);
+        return;
+      }
+
+      const raw = {rest:0,order:0,body:0,focus:0,contact:0,creation:0};
+      checked.forEach(input => addVector(raw, parseVector(input.dataset.vector)));
+      const scores = normalizeScores(raw);
+      const profile = chooseProfile(scores);
+
+      setText("resultKicker", profile.id + " / life diagnosis");
+      setText("resultTitle", profile.title);
+      setText("resultLead", profile.lead);
+      setText("habitValue", profile.habit);
+      setText("weakValue", profile.weak);
+      setText("prescriptionValue", profile.prescription);
+      setText("colorValue", profile.color);
+      setText("adviceValue", profile.advice);
+      renderBars(scores);
+
+      resultSection.classList.add("is-visible");
+      resultSection.scrollIntoView({behavior:"smooth"});
+    });
+
+    retryButton.addEventListener("click", () => {
+      form.reset();
+      resultSection.classList.remove("is-visible");
+      document.getElementById("test").scrollIntoView({behavior:"smooth"});
+    });
+  </script>
+</body>
+</html>
